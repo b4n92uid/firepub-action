@@ -4,16 +4,16 @@ inputs:
   filename:
     description: "The file path to uploader (exe or apk)"
     required: true
-  dst:
-    description: "The destination folder in the bucket"
-    required: true
-    default: "releases"
   sa-key:
     description: "Service Account JSON content"
     required: true
   bucket:
     description: "The storage bucket name"
     required: true
+  dst:
+    description: "The destination folder in the bucket"
+    required: true
+    default: "releases"
 outputs:
   url:
     description: "The storage URL of the uploaded file"
