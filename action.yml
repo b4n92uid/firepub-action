@@ -1,13 +1,22 @@
 name: "Firebase Publish Action"
 description: "Upload file to storage & add entry to Firestore"
 inputs:
-  who-to-greet: # id of input
-    description: "Who to greet"
+  filename:
+    description: "The file path to uploader (exe or apk)"
     required: true
-    default: "World"
+  dst:
+    description: "The destination folder in the bucket"
+    required: true
+    default: "releases"
+  sa-key:
+    description: "Service Account JSON content"
+    required: true
+  bucket:
+    description: "The storage bucket name"
+    required: true
 outputs:
-  time: # id of output
-    description: "The time we greeted you"
+  url:
+    description: "The storage URL of the uploaded file"
 runs:
   using: "node12"
   main: "dist/index.js"

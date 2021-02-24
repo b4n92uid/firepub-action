@@ -1,15 +1,47 @@
 import * as core from "@actions/core"
-import * as github from "@actions/github"
+import { initializeApp, firestore, credential } from "firebase-admin"
+
+import { parseUploadFilename, UpdateData, uploadToBucket } from "./helper"
 
 try {
-  // `who-to-greet` input defined in action metadata file
-  const nameToGreet = core.getInput("who-to-greet")
-  console.log(`Hello ${nameToGreet}!`)
-  const time = new Date().toTimeString()
-  core.setOutput("time", time)
-  // Get the JSON webhook payload for the event that triggered the workflow
-  const payload = JSON.stringify(github.context.payload, undefined, 2)
-  console.log(`The event payload: ${payload}`)
+  ;(async () => {
+    const serviceAccount = core.getInput("sa-key")
+
+    initializeApp({
+      credential: credential.cert(serviceAccount),
+      storageBucket: core.getInput("bucket"),
+    })
+
+    const filename = core.getInput("filename")
+    const dst = core.getInput("dst")
+
+    core.info("Parsing filename...")
+
+    const { version, platform } = parseUploadFilename(filename)
+
+    const updateData: UpdateData = {
+      app: "mosaic",
+      createdAt: new Date(),
+      version,
+      platform,
+    }
+
+    core.info("Uploading...")
+
+    updateData.url = await uploadToBucket(filename, dst)
+
+    core.info("Submitting...")
+
+    await firestore().collection("release").add(updateData)
+
+    core.info(
+      `Version '${updateData.version}' for '${updateData.platform}' uploaded successfully`
+    )
+
+    core.info(updateData.url)
+
+    core.setOutput("url", updateData.url)
+  })()
 } catch (error) {
   core.setFailed(error.message)
 }
