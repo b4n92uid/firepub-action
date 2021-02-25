@@ -16,17 +16,22 @@ export function parseUploadFilename(filename: string) {
 
   const matches = filename.match(regexp)
 
-  if (!matches)
+  if (!matches) {
     throw new Error(`Filename '${filename}' does not matche upload pattern`)
+  }
 
   const info = {
     platform: "",
     version: matches[2],
   }
 
-  if (matches[3] === "exe") info.platform = "windows"
+  if (matches[4] === "exe") info.platform = "windows"
 
-  if (matches[3] === "apk") info.platform = "android"
+  if (matches[4] === "apk") info.platform = "android"
+
+  if (!info.platform) {
+    throw new Error(`Unknown platform for '${filename}'`)
+  }
 
   return info
 }
