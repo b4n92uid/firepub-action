@@ -5,7 +5,7 @@ import { parseUploadFilename, UpdateData, uploadToBucket } from "./helper"
 
 try {
   ;(async () => {
-    const serviceAccount = core.getInput("sa-key")
+    const serviceAccount = JSON.parse(core.getInput("sa-key"))
 
     initializeApp({
       credential: credential.cert(serviceAccount),
