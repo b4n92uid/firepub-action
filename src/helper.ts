@@ -10,7 +10,7 @@ export interface UpdateData {
 }
 
 export function parseUploadFilename(filename: string) {
-  const regexp = /mosaic-store(-app)?-([0-9.]+).(exe|apk)$/
+  const regexp = /mosaic-store(-app)?-([0-9.]+)(-release)?.(exe|apk)$/
 
   filename = basename(filename)
 
