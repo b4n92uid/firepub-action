@@ -2,9 +2,8 @@ import * as core from "@actions/core"
 import { initializeApp, firestore, credential } from "firebase-admin"
 
 import { parseUploadFilename, UpdateData, uploadToBucket } from "./helper"
-
-try {
-  ;(async () => {
+;(async () => {
+  try {
     const serviceAccount = JSON.parse(core.getInput("sa-key"))
 
     initializeApp({
@@ -41,7 +40,7 @@ try {
     core.info(updateData.url)
 
     core.setOutput("url", updateData.url)
-  })()
-} catch (error) {
-  core.setFailed(error.message)
-}
+  } catch (error) {
+    core.setFailed(error.message)
+  }
+})()
